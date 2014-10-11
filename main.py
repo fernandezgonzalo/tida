@@ -20,10 +20,12 @@ def create_config(file_name):
 	config['key_copy_to_clipboard'] = "<Ctrl><Shift>C"
 	config['key_paste_from_clipboard'] = "<Ctrl><Shift>V"
 	config['key_toggle_visibility'] = "F12"
+	config['shell'] = '/usr/bin/bash'
+	config['scrollback_lines'] = -1
 
 	try:
 		f = open(file_name, 'w')
-		config_dump = json.dumps(file_name)
+		config_dump = json.dumps(config)
 		f.write(config_dump)
 		f.close()
 		return config

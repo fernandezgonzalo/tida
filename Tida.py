@@ -12,12 +12,12 @@ class Tida(Gtk.Window):
 	"""A micro-drop-down terminal like TILDA"""
 	def __init__(self, config=None):
 		Gtk.Window.__init__(self)
-		self.init_config(config)
+		self.init_with_config(config)
 		self.init_icon()
-		self.init_terminal()
+		self.init_terminal(config)
 		Gtk.main()
 		
-	def init_config(self, config=None):
+	def init_with_config(self, config=None):
 		"""Initialise the program with config if exists, else set default values"""
 		if config != None:
 			self.set_default_size(config['width'], config['heigth'])
@@ -30,14 +30,6 @@ class Tida(Gtk.Window):
 			s = Gdk.Screen.get_default()
 			c = (s.get_width() - self.get_size()[0]) / 2.
 			self.move(int(c), 0)
-		else:
-			self.set_decorated(False)
-			self.set_skip_taskbar_hint(True)
-			self.set_keep_above(True)
-			self.set_skip_pager_hint(False)
-			self.set_modal(False)
-			self.set_default_size(720, 300)
-			self.move(323, 0)
 		self.init_keybinder(config)
 		
 	def init_icon(self):
@@ -48,12 +40,12 @@ class Tida(Gtk.Window):
 		self.status_icon.set_title("StatusIcon TIDA")
 		self.status_icon.set_tooltip_text("TIDA :>")
 		
-	def init_terminal(self):
+	def init_terminal(self, config):
 		"""Initialise and add new Vte Terminal to Window"""
 		self.term = Vte.Terminal()
-		self.term.set_scrollback_lines(-1)
+		self.term.set_scrollback_lines(config['scrollback_lines'])
 		self.term.connect('child-exited', Gtk.main_quit)
-		self.term.fork_command_full(Vte.PtyFlags.DEFAULT, os.environ['HOME'], ['/usr/bin/bash'], [], GLib.SpawnFlags.DO_NOT_REAP_CHILD, None, None)
+		self.term.fork_command_full(Vte.PtyFlags.DEFAULT, os.environ['HOME'], [config['shell']], [], GLib.SpawnFlags.DO_NOT_REAP_CHILD, None, None)
 		
 		self.add(self.term)
 		self.connect('delete-event', Gtk.main_quit)
