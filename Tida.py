@@ -16,7 +16,7 @@ class Tida(Gtk.Window):
 		self.init_icon()
 		self.init_terminal(config)
 		Gtk.main()
-		
+
 	def init_with_config(self, config=None):
 		"""Initialise the program with config if exists, else set default values"""
 		if config != None:
@@ -26,12 +26,12 @@ class Tida(Gtk.Window):
 			self.set_keep_above(config['keep_above'])
 			self.set_skip_pager_hint(config['skip_pager_hint'])
 			self.set_modal(config['modal'])
-						
+
 			s = Gdk.Screen.get_default()
 			c = (s.get_width() - self.get_size()[0]) / 2.
 			self.move(int(c), 0)
 		self.init_keybinder(config)
-		
+
 	def init_icon(self):
 		"""Initialise status icon"""
 		self.status_icon = Gtk.StatusIcon()
@@ -39,18 +39,18 @@ class Tida(Gtk.Window):
 		self.status_icon.set_from_file(abs_file_name)
 		self.status_icon.set_title("StatusIcon TIDA")
 		self.status_icon.set_tooltip_text("TIDA :>")
-		
+
 	def init_terminal(self, config):
 		"""Initialise and add new Vte Terminal to Window"""
 		self.term = Vte.Terminal()
 		self.term.set_scrollback_lines(config['scrollback_lines'])
 		self.term.connect('child-exited', Gtk.main_quit)
 		self.term.fork_command_full(Vte.PtyFlags.DEFAULT, os.environ['HOME'], [config['shell']], [], GLib.SpawnFlags.DO_NOT_REAP_CHILD, None, None)
-		
+
 		self.add(self.term)
 		self.connect('delete-event', Gtk.main_quit)
-		
-		
+
+
 	def init_keybinder(self, config):
 		"""Initialise keybinder and bind some keys (toggle, copy, paste)"""
 		Keybinder.init()
@@ -59,28 +59,28 @@ class Tida(Gtk.Window):
 							config['key_copy_to_clipboard'],
 							config['key_paste_from_clipboard'])
 
-		
+
 	def bind_all_key(self, key_toggle, key_copy, key_paste):
 		"""Bind all keys used with tida"""
 		Keybinder.bind(key_toggle, self.callback_toggle_visibility, "asd")
 		Keybinder.bind(key_copy, self.callback_copy, "asd")
 		Keybinder.bind(key_paste, self.callback_paste, "asd")
 
-	
+
 	def callback_copy(self, key, asd):
 		"""Callback function used when press the shortcut for copy to clipboard"""
 		if self.is_visible():
 			self.term.copy_clipboard()
 			return True
 		return False
-	
+
 	def callback_paste(self, key, asd):
 		"""Callback function used when press the shortcut for paste from clipboard"""
 		if self.is_visible():
 			self.term.paste_clipboard()
 			return True
 		return False
-			
+
 	def callback_toggle_visibility(self, key, asd):
 		"""Callback function used when press the shortcut for toggle visibility of tida"""
 		if self.is_visible():
