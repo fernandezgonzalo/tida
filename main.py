@@ -22,6 +22,12 @@ def create_config(file_name):
 	config['key_toggle_visibility'] = "F12"
 	config['shell'] = '/usr/bin/bash'
 	config['scrollback_lines'] = -1
+	config['audible_bell'] = False
+	config['allow_bold'] = True
+	config['scroll_on_output'] = True
+	config['scroll_on_keystroke'] = True
+	config['cursor_shape'] = 0
+	config['cursor_blink_mode'] = 0
 
 	try:
 		f = open(file_name, 'w')

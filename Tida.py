@@ -46,7 +46,12 @@ class Tida(Gtk.Window):
 		self.term.set_scrollback_lines(config['scrollback_lines'])
 		self.term.connect('child-exited', Gtk.main_quit)
 		self.term.fork_command_full(Vte.PtyFlags.DEFAULT, os.environ['HOME'], [config['shell']], [], GLib.SpawnFlags.DO_NOT_REAP_CHILD, None, None)
-
+		self.term.set_audible_bell(config['audible_bell'])
+		self.term.set_allow_bold(config['allow_bold'])
+		self.term.set_scroll_on_output(config['scroll_on_output'])
+		self.term.set_scroll_on_keystroke(config['scroll_on_keystroke'])
+		self.term.set_cursor_shape(config['cursor_shape'])
+		self.term.set_cursor_blink_mode(config['cursor_blink_mode'])
 		self.add(self.term)
 		self.connect('delete-event', Gtk.main_quit)
 
